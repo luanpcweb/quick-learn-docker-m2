@@ -1,31 +1,46 @@
 version: "3"
 services:
+
   nginx:
     image: nginx:latest
-    container_name: nginx_desafio
+    container_name: nginx
     ports:
       - "8085:80"
     links:
-      - "php"
+      - "php-72"
     volumes:
-      - ./docker/config/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./docker/config/nginx/sites-enabled/:/etc/nginx/sites-enabled/
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/sites-enabled/:/etc/nginx/sites-enabled/
       - ./:/var/www/html/
 
-  php:
-    build: ./docker/docker-images/php
-    container_name: php_desafio
+  php-72:
+    build: ./docker-images/php-72
+    container_name: php-72
     links:
       - "mysql:mysql"
+      - "mailhog:mailhog"
     volumes:
       - ./:/var/www/html/
 
   mysql:
     image: mysql:5.7
-    container_name: mysql_desafio
+    container_name: mysql
     ports:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - ./docker/data/mysql:/var/lib/mysql
+      - ./data/mysql:/var/lib/mysql
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379":"6379"
