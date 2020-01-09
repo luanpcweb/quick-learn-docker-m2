@@ -125,13 +125,15 @@ cp -a nginx.conf.sample nginx.conf
 
 docker-compose up -d --build
 
-docker exec -it bash php-72 bash
+docker exec -it php-72 bash
 
 cd magento2
 
 composer install -vvv
 
 php bin/magento cron:install
+
+/etc/init.d/cron start
 
 bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis --cache-backend-redis-port=6379 --cache-backend-redis-db=0
 
